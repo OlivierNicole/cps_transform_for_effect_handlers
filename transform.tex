@@ -1,0 +1,47 @@
+\documentclass[11pt]{article}
+
+\input{preamble.tex}
+
+\begin{document}
+
+\textbf{Computations}
+
+\begin{align*}
+  \tr{V \lapp W} &= \lam \id{κs}\dot \tr{V} \dapp \tr{W} \dapp \reify \id{κs} \\
+  \tr{V \lapp T} &= ??? \\
+  \tr{\labsurd V} &= \lam \id{κs}\dot \labsurd \tr{V} \\
+  \tr{\lreturn V} &= \lam κ \cons \id{κs}\dot κ \dapp \tr{V} \dapp \reify \id{κs} \\
+  \tr{\llet x \takes M \lin N} &=
+    \lam \id{κ} \cons \id{κs}\dot \tr{M} \app \Big(\big(\dlam x \lapp \id{ks}\dot \tr{N} \app (κ \cons \reflect \id{ks})\big) \cons \id{κs}\Big) \\
+  \tr{\ldo \ell\ V} &=
+    \lam κ \cons χ \cons η \cons \id{κs}\dot η \dapp \big(\ell\ \langle\tr{V},\ η \dcons κ \dcons []\rangle\big) \dapp \reify\id{κs} \\
+  \tr{\lhandle M \lwith H} &=
+    \lam κ \cons χ \cons \id{κs}\dot \tr{M} \app (\tr{H^\mathrm{ret}} \cons χ \cons \tr{H^\mathrm{ops}} \cons κ \cons χ \cons \id{κs})\text{, where} \\
+\end{align*}
+\begin{align*}
+  \tr{\lreturn x \mapsto N} &= \dlam x\ \id{ks}\dot
+    \dlet (\id{kx} \dcons \id{kf} \dcons \id{ks'}) = \id{ks} \din \\
+       &\phantom{= \dlam x\ \id{ks}\dot}\ \tr{N} \app \reflect\id{ks'} \\
+  \tr{\ell\ p\ r \mapsto N_\ell} &= \dlam (\ell\ \langle p,s \rangle)\ \id{ks}\dot
+    \dlet r = \lfun s \din \\
+      &\phantom{= \dlam (\ell\ \langle p,s \rangle)\ \id{ks}\dot}\ \tr{N_\ell} \app \reflect \id{ks}
+\end{align*}
+\begin{align*}
+  \tr{\lraise V} &= \lam κ \cons χ \cons η \cons \id{κs}\dot χ \dapp \tr{V} \dapp \reify\id{κs} \\
+  \tr{\ltry M \lwith H} &= \lam (κ \cons χ \cons η \cons \id{κs}\ \mathbf{as}\ \id{κs'})\dot
+    \tr{M} \app (K_\mathrm{ret} \cons \tr{H} \cons η \cons \id{κs'})\text{, where}
+\end{align*}
+\begin{align*}
+  K_\mathrm{ret} &= \dlam x\ \id{ks}\dot \dlet (\id{kx} \dcons \id{kf} \dcons k \dcons \id{ks'}) = \id{ks} \din \\
+                 &\phantom{= \dlam x\ \id{ks}\dot}\ k \dapp x \dapp \id{ks'} \\
+  \tr{e \mapsto N} &= \dlam e\ \id{ks}\dot \tr{N} \app \reflect \id{ks}
+\end{align*}
+
+\textbf{Top level program}
+
+\begin{equation*}
+  \top\tr{M} = \tr{M} \app \big(
+    (\dlam x\ \id{ks}\dot x) \cons (\dlam z\ \id{ks}\dot \labsurd z) \cons \reflect [] \big)
+\end{equation*}
+
+\end{document}

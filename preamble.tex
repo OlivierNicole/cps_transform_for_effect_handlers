@@ -1,0 +1,36 @@
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{Libertinus Serif}
+\setmathfont[math-style=french]{Libertinus Math}
+
+\usepackage{xcolor}
+\usepackage{stmaryrd} % \llbracket, ...
+
+\newcommand{\tr}[1]{\llbracket #1 \rrbracket}
+\newcommand{\lam}{{\color{blue}{\overline{\lambda}}}}
+\newcommand{\id}[1]{\mathrm{#1}}
+\renewcommand{\dot}{\mathord{.}\ }
+\newcommand{\app}{\, {\color{blue} \overline{\mathrm{@}}} \,}
+\newcommand{\reify}[1]{\mathord{\downarrow}}
+\newcommand{\llet}{\mathbf{let}\ }
+\newcommand{\lin}{\ \mathbf{in}\ }
+\newcommand{\takes}{\leftarrow}
+\newcommand{\consop}{:\!\!:}
+\newcommand{\cons}{\mathbin{\color{blue} \overline{\consop}}}
+\newcommand{\lapp}{\ }
+\newcommand{\reflect}{\mathord{\uparrow}}
+\newcommand{\lreturn}{\mathbf{return}\ }
+\newcommand{\ltry}{\mathbf{try}\ }
+\newcommand{\lwith}{\ \mathbf{with}\ }
+\newcommand{\lraise}{\mathbf{raise}\ }
+\newcommand{\ldo}{\mathbf{do}\ }
+\newcommand{\lhandle}{\mathbf{handle}\ }
+\newcommand{\lfun}{\mathbf{fun}\ }
+\newcommand{\labsurd}{\mathbf{absurd}\ }
+
+% Dynamic
+\newcommand{\dapp}{\, \underline{\color{red} \mathrm{@}} \,}
+\newcommand{\dlam}{\underline{\color{red} \lambda}}
+\newcommand{\dlet}{\underline{\color{red} \mathbf{let}}\ }
+\newcommand{\din}{\ \underline{\color{red}\mathbf{in}}\ }
+\newcommand{\dcons}{\mathbin{\underline{\color{red} \consop}}}

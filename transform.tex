@@ -4,40 +4,56 @@
 
 \begin{document}
 
-\textbf{Computations}
+\noindent \textbf{Notations}
+
+\noindent We use $\consi$ to push a continuation on the continuation stack of the topmost fiber, without modifyin the effect handler:
+\begin{equation*}
+  κ \consi (\langle \id{κs}, η \rangle \cons \id{μs}) = \langle κ \cons \id{κs},\ η \rangle \cons \id{μs}
+\end{equation*}
+
+\noindent \textbf{Computations}
 
 \begin{align*}
   \tr{V \lapp W} &= \lam \id{κs}\dot \tr{V} \dapp \tr{W} \dapp \reify \id{κs} \\
-  \tr{V \lapp T} &= ??? \\
   \tr{\labsurd V} &= \lam \id{κs}\dot \labsurd \tr{V} \\
-  \tr{\lreturn V} &= \lam κ \cons \id{κs}\dot κ \dapp \tr{V} \dapp \reify \id{κs} \\
+  \tr{\lreturn V} &= \lam \langle κ \cons \id{κs},\ η \rangle \cons \id{μs}\dot κ \dapp \tr{V} \dapp \reify{} (\langle \id{κs}, η \rangle \cons \id{μs}) \\
   \tr{\llet x \takes M \lin N} &=
-    \lam \id{κ} \cons \id{κs}\dot \tr{M} \app \Big(\big(\dlam x \lapp \id{ks}\dot \tr{N} \app (κ \cons \reflect \id{ks})\big) \cons \id{κs}\Big) \\
-  \tr{\ldo \ell\ V} &=
-    \lam κ \cons χ \cons η \cons \id{κs}\dot η \dapp \big(\ell\ \langle\tr{V},\ η \dcons κ \dcons []\rangle\big) \dapp \reify\id{κs} \\
-  \tr{\lhandle M \lwith H} &=
-    \lam κ \cons χ \cons \id{κs}\dot \tr{M} \app (\tr{H^\mathrm{ret}} \cons χ \cons \tr{H^\mathrm{ops}} \cons κ \cons χ \cons \id{κs})\text{, where} \\
+    \lam \langle\id{κ} \cons \id{κs},\ η\rangle \cons \id{μs}\dot \\
+                               & \qquad \tr{M} \app \Big(\big\langle\big(\dlam x \lapp \id{ks}\dot \tr{N} \app (κ \consi \reflect \id{ks})\big) \cons \id{κs},\ η\big\rangle \cons \id{μs}\Big) \\
+  \tr{\lperform V} &=
+    \lam \langle κ \cons \id{κs},\ η\rangle \cons \id{μs}\dot η \dapp \tr{V} \dapp [\langle \reify\id{κs}, η \rangle] \dapp \reify\id{μs} \\
+  \tr{\lhandle M \lwith \{H_v,H_x,H_f\}} &=
+    \lam \id{μs}\dot \tr{M} \app (\langle\tr{H_v} \cons \tr{H_x} \cons [],\ \tr{H_f}\rangle \cons \id{μs})
 \end{align*}
+where
 \begin{align*}
-  \tr{\lreturn x \mapsto N} &= \dlam x\ \id{ks}\dot
-    \dlet (\id{kx} \dcons \id{kf} \dcons \id{ks'}) = \id{ks} \din \\
+  \tr{\lreturn x \mapsto N} &= \dlam x\ \id{ks}\dot \dlet (\id{kf} \dcons \id{ks'}) = \id{ks} \din \\
        &\phantom{= \dlam x\ \id{ks}\dot}\ \tr{N} \app \reflect\id{ks'} \\
-  \tr{\ell\ p\ r \mapsto N_\ell} &= \dlam (\ell\ \langle p,s \rangle)\ \id{ks}\dot
+  \tr{p\ r \mapsto N} &= \dlam p\ s\ \id{ks}\dot
     \dlet r = \lfun s \din \\
-      &\phantom{= \dlam (\ell\ \langle p,s \rangle)\ \id{ks}\dot}\ \tr{N_\ell} \app \reflect \id{ks}
+      &\phantom{= \dlam p\ s\ \id{ks}\dot}\ \tr{N_\ell} \app \reflect \id{ks}
 \end{align*}
 \begin{align*}
-  \tr{\lraise V} &= \lam κ \cons χ \cons η \cons \id{κs}\dot χ \dapp \tr{V} \dapp \reify\id{κs} \\
-  \tr{\ltry M \lwith H} &= \lam (κ \cons χ \cons η \cons \id{κs}\ \mathbf{as}\ \id{κs'})\dot
-    \tr{M} \app (K_\mathrm{ret} \cons \tr{H} \cons η \cons \id{κs'})\text{, where}
+  \tr{\lraise V} &= \lam \langle κ \cons χ \cons \id{κs}\rangle \cons \id{μs}\dot χ \dapp \tr{V} \dapp (\langle\reify\id{κs},η\rangle \dcons \id{μs}) \\
+  \tr{\ltry M \lwith H} &= \lam \langle\id{κs},η\rangle \cons \id{μs}\dot
+    \tr{M} \app (\langle K_\mathrm{ret} \cons \tr{H} \cons \id{κs},\ η\rangle \cons \id{μs})
 \end{align*}
+where
 \begin{align*}
-  K_\mathrm{ret} &= \dlam x\ \id{ks}\dot \dlet (\id{kx} \dcons \id{kf} \dcons k \dcons \id{ks'}) = \id{ks} \din \\
-                 &\phantom{= \dlam x\ \id{ks}\dot}\ k \dapp x \dapp \id{ks'} \\
+  K_\mathrm{ret} &= \dlam x\ \id{ks}\dot \dlet \langle\id{kx} \dcons k \dcons \id{ks'},\ η\rangle \dcons \id{ms} = \id{ks} \din \\
+                 &\phantom{= \dlam x\ \id{ks}\dot}\ k \dapp x \dapp (\langle\id{ks'},η\rangle \dcons \id{ms}) \\
   \tr{e \mapsto N} &= \dlam e\ \id{ks}\dot \tr{N} \app \reflect \id{ks}
 \end{align*}
 
-\textbf{Top level program}
+\noindent {\small \emph{Note:} In the setting of js\_of\_ocaml, $K_\mathrm{ret}$ is not strictly
+necessary, as the source language has explicit \texttt{POPTRAP} statements: we
+could either push a dummy continuation and have \texttt{POPTRAP} pop it (but we
+need to push something for the stack to look as expected to the rest of the
+translation), or push $K_\mathrm{ret}$ and have \texttt{POPTRAP} simply return
+through it. Currently, I’m doing both, but it is superfluous.}
+\bigskip
+
+\noindent \textbf{Top level program}
 
 \begin{equation*}
   \top\tr{M} = \tr{M} \app \big(

@@ -19,17 +19,17 @@
   \tr{\lreturn V} &= \lam \langle κ \cons \id{κs},\ η \rangle \cons \id{μs}\dot κ \dapp \tr{V} \dapp \reify{} (\langle \id{κs}, η \rangle \cons \id{μs}) \\
   \tr{\llet x \takes M \lin N} &=
     \lam \langle\id{κ} \cons \id{κs},\ η\rangle \cons \id{μs}\dot \\
-                               & \qquad \tr{M} \app \Big(\big\langle\big(\dlam x \lapp \id{ks}\dot \tr{N} \app (κ \consi \reflect \id{ks})\big) \cons \id{κs},\ η\big\rangle \cons \id{μs}\Big) \\
+                               & \qquad \tr{M} \app \Big(\big(\dlam x \lapp \id{ks}\dot \tr{N} \app (κ \consi \reflect \id{ks})\big) \consi (\langle\id{κs},η\rangle \cons \id{μs}\rangle)\Big) \\
   \tr{\lperform V} &=
-    \lam \langle κ \cons \id{κs},\ η\rangle \cons \id{μs}\dot η \dapp \tr{V} \dapp [\langle \reify\id{κs}, η \rangle] \dapp \reify\id{μs} \\
+    \lam \langle \id{κs},\ η\rangle \cons \id{μs}\dot η \dapp \tr{V} \dapp [\langle \reify\id{κs}, η \rangle] \dapp \reify\id{μs} \\
   \tr{\lhandle M \lwith \{H_v,H_x,H_f\}} &=
     \lam \id{μs}\dot \tr{M} \app (\langle\tr{H_v} \cons \tr{H_x} \cons [],\ \tr{H_f}\rangle \cons \id{μs})
 \end{align*}
 where
 \begin{equation*}
   \begin{array}{rrcl}
-    H_v : & \tr{\lreturn x \mapsto N} &=& \dlam x\ \id{ks}\dot \dlet (\id{kf} \dcons \id{ks'}) = \id{ks} \din \\
-          & & &\phantom{\dlam x\ \id{ks}\dot}\ \tr{N} \app \reflect\id{ks'} \\
+    H_v : & \tr{\lreturn x \mapsto N} &=& \dlam x\ \id{ks}\dot \dlet \langle\id{ks'},\ η\rangle \dcons \langle\id{ks}'', ι\rangle \dcons \id{ms} = \id{ks} \din \\
+          & & &\phantom{\dlam x\ \id{ks}\dot}\ \tr{N} \app \reflect(\langle\id{ks'} \dconcat \id{ks''},\ \id{ms}\rangle) \\
     H_f : & \tr{p\ r \mapsto N} &=& \dlam p\ s\ \id{ks}\dot \dlet r = \lfun s \din \\
           & & & \phantom{\dlam p\ s\ \id{ks}\dot}\ \tr{N_\ell} \app \reflect \id{ks} \\
     H_x : &\tr{e \mapsto N} &=& \dlam e\ \id{ks}\dot \tr{N} \app \reflect \id{ks}
